@@ -1,10 +1,13 @@
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { Module } from "@nestjs/common";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { Note } from "./notes/entities/notes.entity";
+import { Card } from "./cards/entities/cards.entities";
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+    imports: [TypeOrmModule.forRoot({
+        type: 'mongodb',
+        entities: [Note, Card],
+    })],
 })
-export class AppModule {}
+
+export class AppModule {};
