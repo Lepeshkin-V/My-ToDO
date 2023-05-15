@@ -1,11 +1,11 @@
-import {Column, CreateDateColumn, Entity, ObjectIdColumn} from 'typeorm';
+import {Column, CreateDateColumn, Entity, ObjectIdColumn, ObjectId } from 'typeorm';
 import {PriorityType} from '../enums';
 
 @Entity()
 export class Note {
 
     @ObjectIdColumn()
-    id: number;
+    id: ObjectId;
 
     @Column()
     text: string;
