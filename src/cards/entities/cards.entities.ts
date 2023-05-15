@@ -4,10 +4,7 @@ import { Column, CreateDateColumn, Entity, ObjectIdColumn } from "typeorm";
 
 @Entity()
 export class Card {
-    @ObjectIdColumn()
-    id: number;
-
-    @Column()
+    @ObjectIdColumn({type: 'timestamp'})
     date: Date;
 
     @Column((type) => Note)
