@@ -5,7 +5,13 @@ import {PriorityType} from '../enums';
 export class Note {
 
     @ObjectIdColumn()
-    id: ObjectId;
+    _id: ObjectId;
+
+    @Column()
+    tableId:string;
+
+    @Column()
+    date: string;
 
     @Column()
     text: string;
