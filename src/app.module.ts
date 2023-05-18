@@ -4,11 +4,13 @@ import { Note } from "./notes/entities/notes.entity";
 import { Table } from "./tables/entities/tables.entity";
 import { User } from "./users/entities/users.entity";
 import {DB_URL} from './config';
-import { NoteModule } from "./notes/notes.module";
+import { NotesModule } from "./notes/notes.module";
+import { TablesModule } from "./tables/tables.module";
 
 @Module({
     imports: [
-        NoteModule,
+        NotesModule,
+        TablesModule,
         TypeOrmModule.forRoot({
         type: 'mongodb',
         url: DB_URL,
