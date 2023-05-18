@@ -51,8 +51,7 @@ export class NotesService {
     }
 
     async update(noteId: string, updateNoteDto: UpdateNoteDto) {
-        const update = await this.notesRepository.findOneAndUpdate({ _id: new ObjectId(noteId) }, { $set: updateNoteDto });
-        return update;
+        return await this.notesRepository.findOneAndUpdate({ _id: new ObjectId(noteId) }, { $set: updateNoteDto });;
     }
 
     async delete(noteId: string): Promise<boolean> {

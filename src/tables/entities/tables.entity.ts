@@ -1,12 +1,20 @@
-import { Card } from "src/cards/entities/cards.entities";
-import { Column, Entity, ObjectId, ObjectIdColumn } from "typeorm";
+
+import { Column, CreateDateColumn, Entity, ObjectId, ObjectIdColumn } from "typeorm";
 
 @Entity()
 export class Table {
     @ObjectIdColumn()
     id: ObjectId;
 
-    @Column((type) => Card)
-    cards: Card[]
+    @Column()
+    title: string;
 
+    @Column()
+    userId: string;
+
+    @CreateDateColumn({type: 'timestamp'})
+    createdAt: Date;
+
+    @CreateDateColumn({type: 'timestamp'})
+    updatedAt: Date;
 }
