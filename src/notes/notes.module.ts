@@ -11,4 +11,4 @@ import { NotesService } from "./services/notes.service";
     
 })
 
-export class NoteModule {}
+export class NotesModule {}
