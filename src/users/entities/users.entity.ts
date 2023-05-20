@@ -1,19 +1,20 @@
-import { Table } from "src/tables/entities/tables.entity";
-import { Column, Entity, ObjectId, ObjectIdColumn } from "typeorm";
+import { BeforeInsert, Column, Entity, ObjectId, ObjectIdColumn } from "typeorm";
+import * as crypto from 'crypto';
 
 @Entity()
 export class User {
 
     @ObjectIdColumn()
-    id: ObjectId;
+    _id: ObjectId;
 
     @Column()
-    username:string;
-
-    @Column()
-    email: string;
+    login: string;
 
     @Column()
     password: string;
 
+    @BeforeInsert()
+    hashPasswordBeforeInsert() {
+        this.password = crypto.createHmac('sha256', this.password).digest('hex');
+    }
 }

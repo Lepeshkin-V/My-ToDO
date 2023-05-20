@@ -4,7 +4,7 @@ import { Column, CreateDateColumn, Entity, ObjectId, ObjectIdColumn } from "type
 @Entity()
 export class Table {
     @ObjectIdColumn()
-    id: ObjectId;
+    _id: ObjectId;
 
     @Column()
     title: string;
