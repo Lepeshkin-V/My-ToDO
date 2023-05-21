@@ -1,11 +1,9 @@
-import { PriorityType } from "../enums";
+import { PickType } from '@nestjs/swagger';
+import { CreateNoteDto } from './create-note.dto';
 
-export class UpdateNoteDto {
-    date: Date;
-    
-    text: string;
-
-    priority: PriorityType;
-
-    check: boolean;
-}
+export class UpdateNoteDto extends PickType(CreateNoteDto, [
+  'date',
+  'text',
+  'priority',
+  'check',
+] as const) {}
