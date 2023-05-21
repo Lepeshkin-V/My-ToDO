@@ -1,5 +1,4 @@
 node_modules/
-/dist
 
 # IDE
 /.idea
@@ -45,7 +44,3 @@ build/config\.gypi
 
 .npmrc
 pnpm-lock.yaml
-.env*
-.flaskenv*
-!.env.project
-!.env.vault
