@@ -6,13 +6,9 @@ import { UsersController } from './controllers/users.controller';
 import { TablesModule } from 'src/tables/tables.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([User]),
-    TablesModule
-  ],
+  imports: [TypeOrmModule.forFeature([User]), TablesModule],
   controllers: [UsersController],
   providers: [UsersService],
   exports: [UsersService],
 })
-
-export class UsersModule { }
+export class UsersModule {}

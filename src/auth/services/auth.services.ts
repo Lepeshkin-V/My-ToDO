@@ -35,9 +35,7 @@ export class AuthService {
   }
 
   async signUp(signUpDto: AuthDto): Promise<AuthResponseDto> {
-    const isUser = await this.usersService.getOneByLogin(
-      signUpDto.login,
-    );
+    const isUser = await this.usersService.getOneByLogin(signUpDto.login);
 
     if (isUser) {
       throw new ForbiddenException('Login already exists');

@@ -18,7 +18,6 @@ import { Note } from '../entities/notes.entity';
 @ApiBearerAuth()
 @Controller('notes')
 export class NotesController {
-
   constructor(private readonly notesService: NotesService) {}
 
   @ApiBody({ type: CreateNoteDto })
@@ -42,7 +41,10 @@ export class NotesController {
   @ApiResponse({ status: 200 })
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
-  async update(@Param('id') noteId: string, @Body() input: UpdateNoteDto): Promise<Note> {
+  async update(
+    @Param('id') noteId: string,
+    @Body() input: UpdateNoteDto,
+  ): Promise<Note> {
     return this.notesService.update(noteId, input);
   }
 

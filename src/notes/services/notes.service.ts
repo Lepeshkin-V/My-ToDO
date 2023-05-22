@@ -20,7 +20,7 @@ export class NotesService {
       tableId: createNoteDto.tableId,
       text: createNoteDto.text,
       priority: createNoteDto.priority,
-      check: false
+      check: false,
     });
   }
 
@@ -60,10 +60,13 @@ export class NotesService {
   }
 
   async update(noteId: string, updateNoteDto: UpdateNoteDto): Promise<Note> {
-    return this.notesRepository.save({_id: new ObjectId(noteId), ...updateNoteDto})
+    return this.notesRepository.save({
+      _id: new ObjectId(noteId),
+      ...updateNoteDto,
+    });
   }
 
   async delete(noteId: string): Promise<void> {
-    this.notesRepository.deleteOne({ _id: new ObjectId(noteId) });;
+    this.notesRepository.deleteOne({ _id: new ObjectId(noteId) });
   }
 }

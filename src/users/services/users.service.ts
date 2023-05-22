@@ -7,7 +7,6 @@ import { AuthDto } from 'src/auth/dtos/auth.dto';
 
 @Injectable()
 export class UsersService {
-  
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: MongoRepository<User>,

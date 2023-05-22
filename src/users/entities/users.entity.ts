@@ -8,9 +8,8 @@ import {
 } from 'typeorm';
 import * as crypto from 'crypto';
 
-@Entity({name: 'users'})
+@Entity({ name: 'users' })
 export class User {
-  
   @ObjectIdColumn()
   _id: ObjectId;
 

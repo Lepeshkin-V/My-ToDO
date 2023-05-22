@@ -15,7 +15,7 @@ export class GetForDateDto {
     description: 'Дата заметок',
     example: '2023-05-21',
   })
-  @Type(()=>Date)
+  @Type(() => Date)
   @IsNotEmpty()
   date: string;
 }

@@ -16,11 +16,10 @@ import { TablesService } from 'src/tables/services/tables.service';
 @ApiBearerAuth()
 @Controller('users')
 export class UsersController {
-  
   constructor(
     private readonly authService: AuthService,
-    private readonly tablesService: TablesService
-    ) {}
+    private readonly tablesService: TablesService,
+  ) {}
 
   @ApiOperation({ summary: 'Login' })
   @ApiBody({ type: AuthDto })

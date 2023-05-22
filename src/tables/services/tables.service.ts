@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Table } from '../entities/tables.entity';
-import { MongoRepository} from 'typeorm';
+import { MongoRepository } from 'typeorm';
 import { CreateTableDto } from '../dtos/create-table.dto';
 import { ObjectId } from 'mongodb';
 import { UpdateTableDto } from '../dtos/update-table.dto';
@@ -28,10 +28,10 @@ export class TablesService {
   }
 
   async update(tableId: string, dto: UpdateTableDto): Promise<Table> {
-    return this.tablesRepository.save({_id: new ObjectId(tableId), ...dto});
+    return this.tablesRepository.save({ _id: new ObjectId(tableId), ...dto });
   }
 
   async delete(tableId: string) {
-      await this.tablesRepository.deleteOne({ _id: new ObjectId(tableId) });
+    await this.tablesRepository.deleteOne({ _id: new ObjectId(tableId) });
   }
 }

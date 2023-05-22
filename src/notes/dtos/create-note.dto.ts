@@ -1,14 +1,20 @@
 import { PriorityType } from '../enums';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsBoolean, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateNoteDto {
   @ApiProperty({
     description: 'Дата для выполнения заметки',
     example: '2023-05-21',
   })
-  @Type(()=>Date)
+  @Type(() => Date)
   @IsNotEmpty()
   date: string;
 
@@ -43,7 +49,7 @@ export class CreateNoteDto {
     type: Boolean,
     example: false,
   })
-  @IsOptional() 
+  @IsOptional()
   @IsBoolean()
   check: boolean;
 }

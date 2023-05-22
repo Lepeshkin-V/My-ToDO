@@ -9,7 +9,6 @@ import { PriorityType } from '../enums';
 
 @Entity({ name: 'notes' })
 export class Note {
-
   @ObjectIdColumn()
   _id: ObjectId;
 
@@ -28,7 +27,7 @@ export class Note {
   @Column({
     type: 'enum',
     enum: PriorityType,
-    default: PriorityType.SIDE
+    default: PriorityType.SIDE,
   })
   priority: PriorityType;
 
