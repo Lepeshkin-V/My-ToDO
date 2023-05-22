@@ -9,6 +9,7 @@ import { PriorityType } from '../enums';
 
 @Entity({ name: 'notes' })
 export class Note {
+
   @ObjectIdColumn()
   _id: ObjectId;
 
@@ -22,10 +23,14 @@ export class Note {
   text: string;
 
   @Column()
-  check: boolean = false;
+  check: boolean;
 
-  @Column()
-  priority: PriorityType = PriorityType.SIDE;
+  @Column({
+    type: 'enum',
+    enum: PriorityType,
+    default: PriorityType.SIDE
+  })
+  priority: PriorityType;
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;

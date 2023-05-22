@@ -7,13 +7,16 @@ import { AuthDto } from 'src/auth/dtos/auth.dto';
 
 @Injectable()
 export class UsersService {
+  
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: MongoRepository<User>,
   ) {}
 
-  async getCountByLogin(login: string): Promise<number> {
-    return this.usersRepository.count({ login });
+  async getOneByLogin(login: string): Promise<User> {
+    return this.usersRepository.findOne({
+      where: { login: login },
+    });
   }
 
   async getByLoginAndPassword(login: string, password: string): Promise<User> {

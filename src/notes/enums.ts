@@ -1,6 +1,6 @@
 export enum PriorityType {
-  HIGH = 'red',
-  MEDIUM = 'blue',
-  LOW = 'green',
-  SIDE = 'gray',
+  HIGH = 0,
+  MEDIUM = 1,
+  LOW = 2,
+  SIDE = 3,
 }

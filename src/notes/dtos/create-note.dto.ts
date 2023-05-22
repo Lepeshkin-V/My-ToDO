@@ -1,16 +1,16 @@
 import { PriorityType } from '../enums';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsNotEmpty, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsBoolean, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateNoteDto {
   @ApiProperty({
-    type: Date,
     description: 'Дата для выполнения заметки',
-    example: '2023-05-21T17:43:14.151Z',
+    example: '2023-05-21',
   })
+  @Type(()=>Date)
   @IsNotEmpty()
-  @IsDateString()
-  date: Date;
+  date: string;
 
   @ApiProperty({
     type: String,
@@ -31,15 +31,19 @@ export class CreateNoteDto {
 
   @ApiProperty({
     description: 'Важность заметки',
-    example: 'gray',
-    default: PriorityType.SIDE,
+    enum: PriorityType,
+    enumName: 'PriorityType',
+    nullable: false,
+    example: PriorityType.SIDE,
   })
-  @IsNotEmpty()
+  @IsEnum(PriorityType)
   priority: PriorityType;
 
   @ApiProperty({
     type: Boolean,
-    default: false,
+    example: false,
   })
-  check: boolean = false;
+  @IsOptional() 
+  @IsBoolean()
+  check: boolean;
 }

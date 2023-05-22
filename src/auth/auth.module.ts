@@ -19,4 +19,5 @@ import { UsersModule } from 'src/users/users.module';
   providers: [JwtStartegy, AuthService],
   exports: [AuthService],
 })
+
 export class AuthModule {}
