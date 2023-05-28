@@ -6,21 +6,7 @@ import { CreateNoteDto } from '../dtos/create-note.dto';
 import { UpdateNoteDto } from '../dtos/update-note.dto';
 import { ObjectId } from 'mongodb';
 import { GetForDateDto } from '../dtos/get-for-date.dto';
-export function timer() {
-  let timeStart = new Date().getTime();
-  return {
-      /** <integer>s e.g 2s etc. */
-      get seconds() {
-          const seconds = Math.ceil((new Date().getTime() - timeStart) / 1000) + 's';
-          return seconds;
-      },
-      /** Milliseconds e.g. 2000ms etc. */
-      get ms() {
-          const ms = (new Date().getTime() - timeStart) + 'ms';
-          return ms;
-      }
-  }
-}
+
 @Injectable()
 export class NotesService {
   constructor(
@@ -51,7 +37,6 @@ export class NotesService {
   }
 
   async findForWeek(getWeekDto: GetForDateDto): Promise<Note[]> {
-    const howLong = timer();
     const dates: string[] = [];
     const currentDate = new Date(getWeekDto.date);
     for (let i = currentDate.getDate(); i < currentDate.getDate() + 7; i++) {
@@ -59,7 +44,6 @@ export class NotesService {
       d.setDate(i);
       dates.push(d.toLocaleDateString());
     }
-    console.log(howLong.ms)
     return this.notesRepository.find({
       where: { tableId: getWeekDto.tableId, date: { $in: dates } },
       order:{
