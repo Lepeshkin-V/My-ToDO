@@ -16,13 +16,13 @@ import { ApiBearerAuth, ApiBody, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { Note } from '../entities/notes.entity';
 
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @Controller('notes')
 export class NotesController {
   constructor(private readonly notesService: NotesService) {}
 
   @ApiBody({ type: CreateNoteDto })
   @ApiResponse({ status: 201, type: Note })
-  @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Body() input: CreateNoteDto): Promise<Note> {
     return this.notesService.create(input);
@@ -30,7 +30,6 @@ export class NotesController {
 
   @ApiParam({ name: 'id' })
   @ApiResponse({ status: 200, type: Note })
-  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async getById(@Param('id') noteId: string): Promise<Note> {
     return this.notesService.findeOne(noteId);
@@ -39,7 +38,6 @@ export class NotesController {
   @ApiParam({ name: 'id' })
   @ApiBody({ type: UpdateNoteDto })
   @ApiResponse({ status: 200 })
-  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   async update(
     @Param('id') noteId: string,
@@ -50,7 +48,6 @@ export class NotesController {
 
   @ApiParam({ name: 'id' })
   @ApiResponse({ status: 200 })
-  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async delete(@Param('id') noteId: string): Promise<void> {
     await this.notesService.delete(noteId);
