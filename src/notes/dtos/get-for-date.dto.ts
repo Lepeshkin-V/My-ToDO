@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsDate, IsNotEmpty, IsString } from 'class-validator';
 
 export class GetForDateDto {
   @ApiProperty({
@@ -15,7 +15,8 @@ export class GetForDateDto {
     description: 'Дата заметок',
     example: '2023-05-21',
   })
-  @Type(() => Date)
   @IsNotEmpty()
-  date: string;
+  @Type(() => Date)
+  @IsDate()
+  date: Date;
 }

@@ -3,6 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   IsBoolean,
+  IsDate,
   IsEnum,
   IsNotEmpty,
   IsOptional,
@@ -14,9 +15,10 @@ export class CreateNoteDto {
     description: 'Дата для выполнения заметки',
     example: '2023-05-21',
   })
-  @Type(() => Date)
   @IsNotEmpty()
-  date: string;
+  @Type(() => Date)
+  @IsDate()
+  date: Date;
 
   @ApiProperty({
     type: String,
