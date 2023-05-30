@@ -16,7 +16,7 @@ export class NotesService {
 
   async create(createNoteDto: CreateNoteDto): Promise<Note> {
     return this.notesRepository.save({
-      date: new Date(createNoteDto.date).toLocaleDateString(),
+      date: new Date(createNoteDto.date).toLocaleDateString('sv'),
       tableId: createNoteDto.tableId,
       text: createNoteDto.text,
       priority: createNoteDto.priority,
@@ -39,10 +39,11 @@ export class NotesService {
   async findForWeek(getWeekDto: GetForDateDto): Promise<Note[]> {
     const dates: string[] = [];
     const currentDate = new Date(getWeekDto.date);
+
     for (let i = currentDate.getDate(); i < currentDate.getDate() + 7; i++) {
       const d = new Date();
       d.setDate(i);
-      dates.push(d.toLocaleDateString());
+      dates.push(d.toLocaleDateString('sv'));
     }
     return this.notesRepository.find({
       where: { tableId: getWeekDto.tableId, date: { $in: dates } },
@@ -51,10 +52,11 @@ export class NotesService {
 
   async findForDay(getDayDto: GetForDateDto): Promise<Note[]> {
     const currentDate = new Date(getDayDto.date);
+
     return this.notesRepository.find({
       where: {
         tableId: getDayDto.tableId,
-        date: currentDate.toLocaleDateString(),
+        date: currentDate.toLocaleDateString('sv'),
       },
     });
   }
@@ -62,7 +64,10 @@ export class NotesService {
   async update(noteId: string, updateNoteDto: UpdateNoteDto): Promise<Note> {
     return this.notesRepository.save({
       _id: new ObjectId(noteId),
-      ...updateNoteDto,
+      date: new Date(updateNoteDto.date).toLocaleDateString('sv'),
+      text: updateNoteDto.text,
+      priority: updateNoteDto.priority,
+      check: updateNoteDto.check,
     });
   }
 
