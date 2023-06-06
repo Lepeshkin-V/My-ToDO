@@ -27,19 +27,11 @@ export class TablesService {
     });
   }
 
-  async update(tableId: string, dto: UpdateTableDto) {
-    return this.tablesRepository.findOneAndUpdate(
-      { _id: new ObjectId(tableId) },
-      { $set: dto.title },
-    );
+  async update(tableId: string, dto: UpdateTableDto): Promise<Table> {
+    return this.tablesRepository.save({ _id: new ObjectId(tableId), ...dto });
   }
 
-  async delete(tableId: string): Promise<boolean> {
-    try {
-      await this.tablesRepository.deleteOne({ _id: new ObjectId(tableId) });
-      return true;
-    } catch (error) {
-      return false;
-    }
+  async delete(tableId: string) {
+    await this.tablesRepository.deleteOne({ _id: new ObjectId(tableId) });
   }
 }

@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsNotEmpty, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsDate, IsNotEmpty, IsString } from 'class-validator';
 
 export class GetForDateDto {
   @ApiProperty({
@@ -11,11 +12,11 @@ export class GetForDateDto {
   tableId: string;
 
   @ApiProperty({
-    type: Date,
-    description: '',
-    example: '2023-05-21T17:43:14.151Z',
+    description: 'Дата заметок',
+    example: '2023-05-21',
   })
   @IsNotEmpty()
-  @IsDateString()
+  @Type(() => Date)
+  @IsDate()
   date: Date;
 }

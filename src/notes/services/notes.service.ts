@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Note } from '../entities/notes.entity';
-import { DeleteResult, MongoRepository } from 'typeorm';
+import { MongoRepository } from 'typeorm';
 import { CreateNoteDto } from '../dtos/create-note.dto';
 import { UpdateNoteDto } from '../dtos/update-note.dto';
 import { ObjectId } from 'mongodb';
@@ -16,10 +16,11 @@ export class NotesService {
 
   async create(createNoteDto: CreateNoteDto): Promise<Note> {
     return this.notesRepository.save({
-      date: new Date(createNoteDto.date).toLocaleDateString(),
+      date: new Date(createNoteDto.date).toLocaleDateString('sv'),
       tableId: createNoteDto.tableId,
       text: createNoteDto.text,
       priority: createNoteDto.priority,
+      check: false,
     });
   }
 
@@ -30,8 +31,7 @@ export class NotesService {
         where: { _id: new ObjectId(noteId) },
       }));
     if (!note) {
-      console.log('Сущность с таким ID не найдена');
-      throw new NotFoundException();
+      throw new NotFoundException('Сущность с таким ID не найдена');
     }
     return note;
   }
@@ -39,40 +39,42 @@ export class NotesService {
   async findForWeek(getWeekDto: GetForDateDto): Promise<Note[]> {
     const dates: string[] = [];
     const currentDate = new Date(getWeekDto.date);
+
     for (let i = currentDate.getDate(); i < currentDate.getDate() + 7; i++) {
       const d = new Date();
       d.setDate(i);
-      dates.push(d.toLocaleDateString());
+      dates.push(d.toLocaleDateString('sv'));
     }
-    console.log(dates);
     return this.notesRepository.find({
       where: { tableId: getWeekDto.tableId, date: { $in: dates } },
+      order:{
+        date: "ASC"
+      }
     });
   }
 
   async findForDay(getDayDto: GetForDateDto): Promise<Note[]> {
     const currentDate = new Date(getDayDto.date);
+
     return this.notesRepository.find({
       where: {
         tableId: getDayDto.tableId,
-        date: currentDate.toLocaleDateString(),
+        date: currentDate.toLocaleDateString('sv'),
       },
     });
   }
 
-  async update(noteId: string, updateNoteDto: UpdateNoteDto) {
-    return this.notesRepository.findOneAndUpdate(
-      { _id: new ObjectId(noteId) },
-      { $set: updateNoteDto },
-    );
+  async update(noteId: string, updateNoteDto: UpdateNoteDto): Promise<Note> {
+    return this.notesRepository.save({
+      _id: new ObjectId(noteId),
+      date: new Date(updateNoteDto.date).toLocaleDateString('sv'),
+      text: updateNoteDto.text,
+      priority: updateNoteDto.priority,
+      check: updateNoteDto.check,
+    });
   }
 
-  async delete(noteId: string): Promise<boolean> {
-    try {
-      await this.notesRepository.deleteOne({ _id: new ObjectId(noteId) });
-      return true;
-    } catch (error) {
-      return false;
-    }
+  async delete(noteId: string): Promise<void> {
+    this.notesRepository.deleteOne({ _id: new ObjectId(noteId) });
   }
 }

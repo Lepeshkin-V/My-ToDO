@@ -25,24 +25,23 @@ export class AuthService {
       signInDto.login,
       password,
     );
+
     if (!user) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Wrong login or password');
     }
+
     const jwtToken = await this.jwtService.signAsync({ id: user._id });
     return { jwtToken, user };
   }
 
   async signUp(signUpDto: AuthDto): Promise<AuthResponseDto> {
-    const isUserAlreadyExists = await this.usersService.getCountByLogin(
-      signUpDto.login,
-    );
+    const isUser = await this.usersService.getOneByLogin(signUpDto.login);
 
-    if (isUserAlreadyExists > 0) {
-      throw new ForbiddenException('login already exists');
+    if (isUser) {
+      throw new ForbiddenException('Login already exists');
     }
 
     const user = await this.usersService.create(signUpDto);
-
     const jwtToken = await this.jwtService.signAsync({ id: user._id });
 
     return { jwtToken, user };
