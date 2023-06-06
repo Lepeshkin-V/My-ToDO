@@ -47,6 +47,9 @@ export class NotesService {
     }
     return this.notesRepository.find({
       where: { tableId: getWeekDto.tableId, date: { $in: dates } },
+      order:{
+        date: "ASC"
+      }
     });
   }
 
