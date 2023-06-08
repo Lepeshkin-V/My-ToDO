@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   UseGuards,
+  UsePipes,
 } from '@nestjs/common';
 import { NotesService } from '../services/notes.service';
 import { CreateNoteDto } from '../dtos/create-note.dto';
@@ -14,6 +15,7 @@ import { UpdateNoteDto } from '../dtos/update-note.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ApiBearerAuth, ApiBody, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { Note } from '../entities/notes.entity';
+import JoiValidationPipe from 'src/common/validators/id.validator';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -31,7 +33,7 @@ export class NotesController {
   @ApiParam({ name: 'id' })
   @ApiResponse({ status: 200, type: Note })
   @Get(':id')
-  async getById(@Param('id') noteId: string): Promise<Note> {
+  async getById(@Param('id', JoiValidationPipe) noteId: string): Promise<Note> {
     return this.notesService.findeOne(noteId);
   }
 
@@ -40,7 +42,7 @@ export class NotesController {
   @ApiResponse({ status: 200 })
   @Patch(':id')
   async update(
-    @Param('id') noteId: string,
+    @Param('id', JoiValidationPipe) noteId: string,
     @Body() input: UpdateNoteDto,
   ): Promise<Note> {
     return this.notesService.update(noteId, input);
@@ -49,7 +51,7 @@ export class NotesController {
   @ApiParam({ name: 'id' })
   @ApiResponse({ status: 200 })
   @Delete(':id')
-  async delete(@Param('id') noteId: string): Promise<void> {
+  async delete(@Param('id', JoiValidationPipe) noteId: string): Promise<void> {
     await this.notesService.delete(noteId);
   }
 }

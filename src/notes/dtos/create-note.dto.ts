@@ -5,9 +5,11 @@ import {
   IsBoolean,
   IsDate,
   IsEnum,
+  IsHexadecimal,
   IsNotEmpty,
   IsOptional,
   IsString,
+  Length,
 } from 'class-validator';
 
 export class CreateNoteDto {
@@ -26,6 +28,8 @@ export class CreateNoteDto {
   })
   @IsNotEmpty()
   @IsString()
+  @IsHexadecimal()
+  @Length(24, 24)
   tableId: string;
 
   @ApiProperty({
