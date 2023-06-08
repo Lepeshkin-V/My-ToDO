@@ -1,13 +1,15 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Note } from './notes/entities/notes.entity';
-import { Table } from './tables/entities/tables.entity';
-import { User } from './users/entities/users.entity';
-import { DB_URL } from './config';
+import configuration, {
+  validationOptions,
+  validationSchema,
+} from './config/configuration';
 import { NotesModule } from './notes/notes.module';
 import { TablesModule } from './tables/tables.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
+import { TypeOrmConfigService } from './common/services/typeorm-config.service';
 
 @Module({
   imports: [
@@ -15,11 +17,16 @@ import { AuthModule } from './auth/auth.module';
     NotesModule,
     TablesModule,
     UsersModule,
-    TypeOrmModule.forRoot({
-      type: 'mongodb',
-      url: DB_URL,
-      database: 'ToDo',
-      entities: [Note, Table, User],
+
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [configuration],
+      validationSchema: validationSchema,
+      validationOptions: validationOptions,
+    }),
+
+    TypeOrmModule.forRootAsync({
+      useClass: TypeOrmConfigService,
     }),
   ],
 })
