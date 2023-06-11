@@ -5,8 +5,12 @@ import { Table } from '../../tables/entities/tables.entity';
 import { Note } from '../../notes/entities/notes.entity';
 import { rand } from '@ngneat/falso';
 
-export default class CreateNotes implements Seeder {
+export default class NotesSeed implements Seeder {
   public async run(factory: Factory, connection: Connection): Promise<void> {
+    if(process.env.NODE_ENV != 'develop'){
+      return
+    }
+    
     connection.getMongoRepository(User).clear();
     connection.getMongoRepository(Table).clear();
     connection.getMongoRepository(Note).clear();
