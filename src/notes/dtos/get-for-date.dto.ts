@@ -1,6 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsDate, IsHexadecimal, IsNotEmpty, IsString, Length } from 'class-validator';
+import {
+  IsDate,
+  IsHexadecimal,
+  IsNotEmpty,
+  IsString,
+  Length,
+} from 'class-validator';
 
 export class GetForDateDto {
   @ApiProperty({

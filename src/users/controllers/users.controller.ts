@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, UseGuards, UsePipes } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  UseGuards,
+  UsePipes,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -42,7 +50,9 @@ export class UsersController {
   @ApiResponse({ status: 200, type: [Table] })
   @UseGuards(JwtAuthGuard)
   @Get(':id/tables')
-  getByUserId(@Param('id', JoiValidationPipe) userId: string): Promise<Table[]> {
+  getByUserId(
+    @Param('id', JoiValidationPipe) userId: string,
+  ): Promise<Table[]> {
     return this.tablesService.getByUserId(userId);
   }
 }

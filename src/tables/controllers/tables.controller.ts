@@ -34,7 +34,7 @@ export class TablesController {
   constructor(
     private readonly tablesService: TablesService,
     private readonly notesService: NotesService,
-  ) { }
+  ) {}
 
   @ApiBody({ type: CreateTableDto })
   @ApiResponse({ status: 201, type: Table })
@@ -46,7 +46,9 @@ export class TablesController {
   @ApiParam({ name: 'id' })
   @ApiResponse({ status: 200, type: Table })
   @Get(':id')
-  async getById(@Param('id', JoiValidationPipe) tableId: string): Promise<Table> {
+  async getById(
+    @Param('id', JoiValidationPipe) tableId: string,
+  ): Promise<Table> {
     return this.tablesService.getById(tableId);
   }
 
@@ -71,8 +73,8 @@ export class TablesController {
     @Query() query: DateQueryDto,
   ): Promise<Note[]> {
     return this.notesService.findForDay({
-      tableId: tableId, 
-      date: query.date
+      tableId: tableId,
+      date: query.date,
     });
   }
 
