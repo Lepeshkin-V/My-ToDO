@@ -5,7 +5,7 @@ import { MongoRepository } from 'typeorm';
 import { CreateNoteDto } from '../dtos/create-note.dto';
 import { UpdateNoteDto } from '../dtos/update-note.dto';
 import { ObjectId } from 'mongodb';
-import { GetForDateDto } from '../dtos/get-for-date.dto';
+import { GetNotesForDateDto } from '../dtos/get-for-date.dto';
 
 @Injectable()
 export class NotesService {
@@ -36,7 +36,7 @@ export class NotesService {
     return note;
   }
 
-  async findForWeek(getWeekDto: GetForDateDto): Promise<Note[]> {
+  async findForWeek(getWeekDto: GetNotesForDateDto): Promise<Note[]> {
     const dates: string[] = [];
     const currentDate = new Date(getWeekDto.date);
 
@@ -47,13 +47,13 @@ export class NotesService {
     }
     return this.notesRepository.find({
       where: { tableId: getWeekDto.tableId, date: { $in: dates } },
-      order:{
-        date: "ASC"
-      }
+      order: {
+        date: 'ASC',
+      },
     });
   }
 
-  async findForDay(getDayDto: GetForDateDto): Promise<Note[]> {
+  async findForDay(getDayDto: GetNotesForDateDto): Promise<Note[]> {
     const currentDate = new Date(getDayDto.date);
 
     return this.notesRepository.find({

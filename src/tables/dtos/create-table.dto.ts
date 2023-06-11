@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsHexadecimal, IsNotEmpty, IsString, Length } from 'class-validator';
 
 export class CreateTableDto {
   @ApiProperty({
@@ -15,7 +15,7 @@ export class CreateTableDto {
     type: String,
     description: 'Id пользователя',
   })
-  @IsNotEmpty()
-  @IsString()
+  @IsHexadecimal()
+  @Length(24, 24)
   userId: string;
 }
