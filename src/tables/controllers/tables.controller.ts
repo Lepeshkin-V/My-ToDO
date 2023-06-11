@@ -8,7 +8,6 @@ import {
   Post,
   Query,
   UseGuards,
-  UsePipes,
 } from '@nestjs/common';
 import { TablesService } from '../services/tables.service';
 import { CreateTableDto } from '../dtos/create-table.dto';
@@ -25,7 +24,7 @@ import { UpdateTableDto } from '../dtos/update-table.dto';
 import { NotesService } from 'src/notes/services/notes.service';
 import { Note } from 'src/notes/entities/notes.entity';
 import { DateQueryDto } from '../dtos/date-query.dto';
-import JoiValidationPipe from 'src/common/validators/id.validator';
+import MongoIdJoiValidationPipe from 'src/common/validators/id.validator';
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -47,7 +46,7 @@ export class TablesController {
   @ApiResponse({ status: 200, type: Table })
   @Get(':id')
   async getById(
-    @Param('id', JoiValidationPipe) tableId: string,
+    @Param('id', MongoIdJoiValidationPipe) tableId: string,
   ): Promise<Table> {
     return this.tablesService.getById(tableId);
   }
@@ -56,7 +55,7 @@ export class TablesController {
   @ApiResponse({ status: 200, type: [Note] })
   @Get(':id/notes/week')
   async getWeek(
-    @Param('id', JoiValidationPipe) tableId: string,
+    @Param('id', MongoIdJoiValidationPipe) tableId: string,
     @Query() query: DateQueryDto,
   ): Promise<Note[]> {
     return this.notesService.findForWeek({
@@ -69,7 +68,7 @@ export class TablesController {
   @ApiResponse({ status: 200, type: [Note] })
   @Get(':id/notes/day')
   async getDay(
-    @Param('id', JoiValidationPipe) tableId: string,
+    @Param('id', MongoIdJoiValidationPipe) tableId: string,
     @Query() query: DateQueryDto,
   ): Promise<Note[]> {
     return this.notesService.findForDay({
@@ -83,7 +82,7 @@ export class TablesController {
   @ApiResponse({ status: 200 })
   @Patch(':id')
   async update(
-    @Param('id', JoiValidationPipe) tableId: string,
+    @Param('id', MongoIdJoiValidationPipe) tableId: string,
     @Body() input: UpdateTableDto,
   ): Promise<Table> {
     return this.tablesService.update(tableId, input);
@@ -92,7 +91,7 @@ export class TablesController {
   @ApiParam({ name: 'id' })
   @ApiResponse({ status: 200 })
   @Delete(':id')
-  async delete(@Param('id', JoiValidationPipe) tableId: string): Promise<void> {
+  async delete(@Param('id', MongoIdJoiValidationPipe) tableId: string): Promise<void> {
     await this.tablesService.delete(tableId);
   }
 }

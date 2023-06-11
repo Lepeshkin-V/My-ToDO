@@ -5,7 +5,6 @@ import {
   Param,
   Post,
   UseGuards,
-  UsePipes,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -20,7 +19,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { AuthService } from 'src/auth/services/auth.services';
 import { Table } from 'src/tables/entities/tables.entity';
 import { TablesService } from 'src/tables/services/tables.service';
-import JoiValidationPipe from 'src/common/validators/id.validator';
+import MongoIdJoiValidationPipe from 'src/common/validators/id.validator';
 
 @ApiBearerAuth()
 @Controller('users')
@@ -51,7 +50,7 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Get(':id/tables')
   getByUserId(
-    @Param('id', JoiValidationPipe) userId: string,
+    @Param('id', MongoIdJoiValidationPipe) userId: string,
   ): Promise<Table[]> {
     return this.tablesService.getByUserId(userId);
   }

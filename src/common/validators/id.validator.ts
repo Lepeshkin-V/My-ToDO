@@ -11,7 +11,7 @@ const idParamSchema = Joi.object({
 });
 
 @Injectable()
-class JoiValidationPipe implements PipeTransform {
+class MongoIdJoiValidationPipe implements PipeTransform {
   constructor(private schema: Joi.ObjectSchema) {}
 
   transform(value: any, metadata: ArgumentMetadata = { type: 'param' }) {
@@ -23,4 +23,4 @@ class JoiValidationPipe implements PipeTransform {
   }
 }
 
-export default new JoiValidationPipe(idParamSchema);
+export default new MongoIdJoiValidationPipe(idParamSchema);
