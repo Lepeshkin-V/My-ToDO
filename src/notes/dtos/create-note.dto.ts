@@ -26,8 +26,6 @@ export class CreateNoteDto {
     type: String,
     description: 'Id стола для заметок',
   })
-  @IsNotEmpty()
-  @IsString()
   @IsHexadecimal()
   @Length(24, 24)
   tableId: string;

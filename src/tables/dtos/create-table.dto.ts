@@ -15,8 +15,6 @@ export class CreateTableDto {
     type: String,
     description: 'Id пользователя',
   })
-  @IsNotEmpty()
-  @IsString()
   @IsHexadecimal()
   @Length(24, 24)
   userId: string;
