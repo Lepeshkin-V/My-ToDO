@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
 import { User } from '../entities/users.entity';
 import { ObjectId } from 'mongodb';
-import { AuthDto } from 'src/auth/dtos/auth.dto';
+import { AuthFeatureDto } from 'src/auth/dtos/auth-feature.dto';
 
 @Injectable()
 export class UsersService {
@@ -13,24 +13,38 @@ export class UsersService {
   ) {}
 
   async getOneByLogin(login: string): Promise<User> {
-    return this.usersRepository.findOne({
+    const user = this.usersRepository.findOne({
       where: { login: login },
     });
+
+    return user;
   }
 
-  async getByLoginAndPassword(login: string, password: string): Promise<User> {
-    return this.usersRepository.findOne({
+  async getByLoginAndPassword(dto: AuthFeatureDto): Promise<User> {
+    const { login, password } = dto;
+
+    const user = await this.usersRepository.findOne({
       where: { login: login, password: password },
     });
+
+    return user;
   }
 
   async getOneOrFail(id: string): Promise<User> {
-    return this.usersRepository.findOneOrFail({
+    const user = await this.usersRepository.findOneOrFail({
       where: { _id: new ObjectId(id) },
     });
+
+    return user;
   }
 
-  async create(user: AuthDto): Promise<User> {
-    return this.usersRepository.save(this.usersRepository.create(user));
+  async create(dto: AuthFeatureDto): Promise<User> {
+    const { login, password } = dto;
+
+    const user = await this.usersRepository.save(
+      this.usersRepository.create({ login: login, password: password }),
+    );
+
+    return user;
   }
 }
