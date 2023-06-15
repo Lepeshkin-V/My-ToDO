@@ -7,10 +7,11 @@ import { rand } from '@ngneat/falso';
 
 export default class NotesSeed implements Seeder {
   public async run(factory: Factory, connection: Connection): Promise<void> {
-    if(process.env.NODE_ENV != 'develop'){
-      return
+    console.log();
+    if (process.env.NODE_ENV !== 'development') {
+      return;
     }
-    
+
     connection.getMongoRepository(User).clear();
     connection.getMongoRepository(Table).clear();
     connection.getMongoRepository(Note).clear();

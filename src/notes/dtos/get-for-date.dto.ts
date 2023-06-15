@@ -1,19 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import {
-  IsDate,
-  IsHexadecimal,
-  IsNotEmpty,
-  Length,
-} from 'class-validator';
+import { IsDate, IsMongoId, IsNotEmpty } from 'class-validator';
 
 export class GetNotesForDateDto {
   @ApiProperty({
     type: String,
     description: 'Id стола для заметок',
   })
-  @IsHexadecimal()
-  @Length(24, 24)
+  @IsNotEmpty()
+  @IsMongoId()
   tableId: string;
 
   @ApiProperty({

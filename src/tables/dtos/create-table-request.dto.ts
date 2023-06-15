@@ -1,7 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsHexadecimal, IsNotEmpty, IsString, Length } from 'class-validator';
+import {
+  IsHexadecimal,
+  IsMongoId,
+  IsNotEmpty,
+  IsString,
+  Length,
+} from 'class-validator';
 
-export class CreateTableDto {
+export class CreateTableRequestDto {
   @ApiProperty({
     type: String,
     description: 'Название стола для заметок',
@@ -15,7 +21,7 @@ export class CreateTableDto {
     type: String,
     description: 'Id пользователя',
   })
-  @IsHexadecimal()
-  @Length(24, 24)
+  @IsNotEmpty()
+  @IsMongoId()
   userId: string;
 }

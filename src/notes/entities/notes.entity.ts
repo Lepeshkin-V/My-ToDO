@@ -16,7 +16,7 @@ export class Note {
   tableId: string;
 
   @Column()
-  date: string;
+  date: Date;
 
   @Column()
   text: string;

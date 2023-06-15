@@ -2,8 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Note } from '../entities/notes.entity';
 import { MongoRepository } from 'typeorm';
-import { CreateNoteDto } from '../dtos/create-note.dto';
-import { UpdateNoteDto } from '../dtos/update-note.dto';
+import { CreateFeatureNoteDto } from '../dtos/create-feature-note.dto';
+import { UpdateFeatureNoteDto } from '../dtos/update-feature-note.dto';
 import { ObjectId } from 'mongodb';
 import { GetNotesForDateDto } from '../dtos/get-for-date.dto';
 
@@ -14,67 +14,89 @@ export class NotesService {
     private readonly notesRepository: MongoRepository<Note>,
   ) {}
 
-  async create(createNoteDto: CreateNoteDto): Promise<Note> {
-    return this.notesRepository.save({
-      date: new Date(createNoteDto.date).toLocaleDateString('sv'),
-      tableId: createNoteDto.tableId,
-      text: createNoteDto.text,
-      priority: createNoteDto.priority,
+  async create(dto: CreateFeatureNoteDto): Promise<Note> {
+    const { date, tableId, text, priority } = dto;
+
+    const currentDate = new Date(date);
+    currentDate.setHours(0, 0, 0, 0);
+
+    const note = await this.notesRepository.save({
+      date: currentDate,
+      tableId: tableId,
+      text: text,
+      priority: priority,
       check: false,
     });
+
+    return note;
   }
 
   async findeOne(noteId: string): Promise<Note> {
-    const note =
-      ObjectId.isValid(noteId) &&
-      (await this.notesRepository.findOneBy({
-        where: { _id: new ObjectId(noteId) },
-      }));
+    const note = await this.notesRepository.findOneBy({
+      where: { _id: new ObjectId(noteId) },
+    });
+
     if (!note) {
       throw new NotFoundException('Сущность с таким ID не найдена');
     }
+
     return note;
   }
 
   async findForWeek(getWeekDto: GetNotesForDateDto): Promise<Note[]> {
-    const dates: string[] = [];
-    const currentDate = new Date(getWeekDto.date);
+    const startDate = new Date(getWeekDto.date);
+    startDate.setHours(0, 0, 0, 0);
+    const finishDate = new Date();
+    finishDate.setDate(startDate.getDate() + 7);
+    finishDate.setHours(0, 0, 0, 0);
 
-    for (let i = currentDate.getDate(); i < currentDate.getDate() + 7; i++) {
-      const d = new Date();
-      d.setDate(i);
-      dates.push(d.toLocaleDateString('sv'));
-    }
-    return this.notesRepository.find({
-      where: { tableId: getWeekDto.tableId, date: { $in: dates } },
+    const notes = await this.notesRepository.find({
+      where: {
+        tableId: getWeekDto.tableId,
+        date: { $gt: startDate, $lt: finishDate },
+      },
       order: {
         date: 'ASC',
       },
     });
+
+    return notes;
   }
 
-  async findForDay(getDayDto: GetNotesForDateDto): Promise<Note[]> {
-    const currentDate = new Date(getDayDto.date);
+  async findForDay(dto: GetNotesForDateDto): Promise<Note[]> {
+    const { tableId, date } = dto;
 
-    return this.notesRepository.find({
+    const currentDate = new Date(date);
+    currentDate.setHours(0, 0, 0, 0);
+
+    const notes = await this.notesRepository.find({
       where: {
-        tableId: getDayDto.tableId,
-        date: currentDate.toLocaleDateString('sv'),
+        tableId: tableId,
+        date: currentDate,
       },
     });
+
+    return notes;
   }
 
-  async update(noteId: string, updateNoteDto: UpdateNoteDto): Promise<Note> {
-    return this.notesRepository.save({
+  async update(noteId: string, dto: UpdateFeatureNoteDto): Promise<Note> {
+    const { date, text, priority, check } = dto;
+
+    const currentDate = new Date(date);
+    currentDate.setHours(0, 0, 0, 0);
+
+    const note = await this.notesRepository.save({
       _id: new ObjectId(noteId),
-      date: new Date(updateNoteDto.date).toLocaleDateString('sv'),
-      text: updateNoteDto.text,
-      priority: updateNoteDto.priority,
-      check: updateNoteDto.check,
+      date: currentDate,
+      text: text,
+      priority: priority,
+      check: check,
     });
+
+    return note;
   }
 
   async delete(noteId: string): Promise<void> {
-    this.notesRepository.deleteOne({ _id: new ObjectId(noteId) });
+    await this.notesRepository.deleteOne({ _id: new ObjectId(noteId) });
   }
 }

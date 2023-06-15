@@ -15,7 +15,8 @@ define(Note, () => {
   note.date = randBetweenDate({
     from: startDate,
     to: finishDate,
-  }).toLocaleDateString('sv');
+  });
+  note.date.setHours(0, 0, 0, 0);
   note.text = randText();
   note.priority = PriorityType[rand(prioryties)];
   note.check = randBoolean();

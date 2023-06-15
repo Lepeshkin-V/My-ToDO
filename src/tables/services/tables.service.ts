@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Table } from '../entities/tables.entity';
 import { MongoRepository } from 'typeorm';
-import { CreateTableDto } from '../dtos/create-table.dto';
+import { CreateFeatureTableDto } from '../dtos/create-feature-table.dto';
 import { ObjectId } from 'mongodb';
-import { UpdateTableDto } from '../dtos/update-table.dto';
+import { UpdateFeatureTableDto } from '../dtos/update-feature-table.dto';
 
 @Injectable()
 export class TablesService {
@@ -13,22 +13,42 @@ export class TablesService {
     private readonly tablesRepository: MongoRepository<Table>,
   ) {}
 
-  async create(createTableDto: CreateTableDto): Promise<Table> {
-    return this.tablesRepository.save(createTableDto);
+  async create(dto: CreateFeatureTableDto): Promise<Table> {
+    const { title, userId } = dto;
+
+    const table = await this.tablesRepository.save({
+      title: title,
+      userId: userId,
+    });
+
+    return table;
   }
 
   async getByUserId(userId: string): Promise<Table[]> {
-    return this.tablesRepository.find({ where: { userId: userId } });
+    const tables = await this.tablesRepository.find({
+      where: { userId: userId },
+    });
+
+    return tables;
   }
 
   async getById(tableId: string): Promise<Table> {
-    return this.tablesRepository.findOne({
+    const table = await this.tablesRepository.findOne({
       where: { _id: new ObjectId(tableId) },
     });
+
+    return table;
   }
 
-  async update(tableId: string, dto: UpdateTableDto): Promise<Table> {
-    return this.tablesRepository.save({ _id: new ObjectId(tableId), ...dto });
+  async update(tableId: string, dto: UpdateFeatureTableDto): Promise<Table> {
+    const { title } = dto;
+
+    const table = await this.tablesRepository.save({
+      _id: new ObjectId(tableId),
+      title: title,
+    });
+
+    return table;
   }
 
   async delete(tableId: string) {

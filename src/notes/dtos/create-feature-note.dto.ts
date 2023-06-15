@@ -5,14 +5,13 @@ import {
   IsBoolean,
   IsDate,
   IsEnum,
-  IsHexadecimal,
+  IsMongoId,
   IsNotEmpty,
   IsOptional,
   IsString,
-  Length,
 } from 'class-validator';
 
-export class CreateNoteDto {
+export class CreateFeatureNoteDto {
   @ApiProperty({
     description: 'Дата для выполнения заметки',
     example: '2023-05-21',
@@ -26,8 +25,8 @@ export class CreateNoteDto {
     type: String,
     description: 'Id стола для заметок',
   })
-  @IsHexadecimal()
-  @Length(24, 24)
+  @IsNotEmpty()
+  @IsMongoId()
   tableId: string;
 
   @ApiProperty({
