@@ -5,8 +5,8 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/services/users.service';
-import { AuthDto } from '../dtos/auth.dto';
-import { AuthResponseDto } from '../dtos/auth-response.dto';
+import { AuthFeatureDto } from '../dtos/auth-feature.dto';
+import { AuthResultDto } from '../dtos/auth-result.dto';
 import * as crypto from 'crypto';
 
 @Injectable()
@@ -16,15 +16,15 @@ export class AuthService {
     private readonly usersService: UsersService,
   ) {}
 
-  async signIn(signInDto: AuthDto): Promise<AuthResponseDto> {
-    const password = crypto
-      .createHmac('sha256', signInDto.password)
-      .digest('hex');
+  async signIn(dto: AuthFeatureDto): Promise<AuthResultDto> {
+    const { login, password } = dto;
 
-    const user = await this.usersService.getByLoginAndPassword(
-      signInDto.login,
-      password,
-    );
+    const hashPassword = crypto.createHmac('sha256', password).digest('hex');
+
+    const user = await this.usersService.getByLoginAndPassword({
+      login: login,
+      password: hashPassword,
+    });
 
     if (!user) {
       throw new UnauthorizedException('Wrong login or password');
@@ -34,14 +34,16 @@ export class AuthService {
     return { jwtToken, user };
   }
 
-  async signUp(signUpDto: AuthDto): Promise<AuthResponseDto> {
-    const isUser = await this.usersService.getOneByLogin(signUpDto.login);
+  async signUp(dto: AuthFeatureDto): Promise<AuthResultDto> {
+    const { login, password } = dto;
+
+    const isUser = await this.usersService.getOneByLogin(login);
 
     if (isUser) {
       throw new ForbiddenException('Login already exists');
     }
 
-    const user = await this.usersService.create(signUpDto);
+    const user = await this.usersService.create({ login, password });
     const jwtToken = await this.jwtService.signAsync({ id: user._id });
 
     return { jwtToken, user };
