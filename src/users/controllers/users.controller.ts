@@ -1,11 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -13,13 +6,14 @@ import {
   ApiParam,
   ApiResponse,
 } from '@nestjs/swagger';
-import { AuthResponseDto } from 'src/auth/dtos/auth-response.dto';
-import { AuthDto } from 'src/auth/dtos/auth.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { AuthService } from 'src/auth/services/auth.services';
+import { AuthService } from 'src/auth/services/auth.service';
 import { Table } from 'src/tables/entities/tables.entity';
 import { TablesService } from 'src/tables/services/tables.service';
 import MongoIdJoiValidationPipe from 'src/common/validators/id.validator';
+import { AuthRequestDto } from '../dtos/auth-request.dto';
+import { AuthResponseDto } from '../dtos/auth-response.dto';
+import { TableResponseDto } from 'src/tables/dtos/table-response.dto';
 
 @ApiBearerAuth()
 @Controller('users')
@@ -30,28 +24,49 @@ export class UsersController {
   ) {}
 
   @ApiOperation({ summary: 'Login' })
-  @ApiBody({ type: AuthDto })
+  @ApiBody({ type: AuthRequestDto })
   @ApiResponse({ status: 201, type: AuthResponseDto })
   @Post('signIn')
-  async signIn(@Body() input: AuthDto): Promise<AuthResponseDto> {
-    return this.authService.signIn(input);
+  async signIn(@Body() input: AuthRequestDto): Promise<AuthResponseDto> {
+    const authData = await this.authService.signIn({
+      login: input.login,
+      password: input.password,
+    });
+    return new AuthResponseDto({
+      jwtToken: authData.jwtToken,
+      userResponse: authData.user,
+    });
   }
 
   @ApiOperation({ summary: 'Register' })
-  @ApiBody({ type: AuthDto })
+  @ApiBody({ type: AuthRequestDto })
   @ApiResponse({ status: 201, type: AuthResponseDto })
   @Post('signUp')
-  async signUp(@Body() input: AuthDto): Promise<AuthResponseDto> {
-    return this.authService.signUp(input);
+  async signUp(@Body() input: AuthRequestDto): Promise<AuthResponseDto> {
+    const authData = await this.authService.signUp({
+      login: input.login,
+      password: input.password,
+    });
+
+    return new AuthResponseDto({
+      jwtToken: authData.jwtToken,
+      userResponse: authData.user,
+    });
   }
 
   @ApiParam({ name: 'id' })
-  @ApiResponse({ status: 200, type: [Table] })
+  @ApiResponse({ status: 200, type: [TableResponseDto] })
   @UseGuards(JwtAuthGuard)
   @Get(':id/tables')
-  getByUserId(
+  async getByUserId(
     @Param('id', MongoIdJoiValidationPipe) userId: string,
-  ): Promise<Table[]> {
-    return this.tablesService.getByUserId(userId);
+  ): Promise<TableResponseDto[]> {
+    const tablesByUser = await this.tablesService.getByUserId(userId);
+
+    const tablesByUserResponse = tablesByUser.map((table) => {
+      return new TableResponseDto(table);
+    });
+
+    return tablesByUserResponse;
   }
 }
